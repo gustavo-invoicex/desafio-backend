@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
-        userDTO.setScore(validatorPasswordFacade.obtainScore(userDTO.getPassword()));
+        userDTO.setScore(validatorPasswordFacade.obtainScorePercent(userDTO.getPassword()));
         userDTO.setPasswordSecurityLevel(validatorPasswordFacade.obtainPasswordSecurityLevel(userDTO.getPassword()));
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User user = repository.save(mapper.toUser(userDTO));

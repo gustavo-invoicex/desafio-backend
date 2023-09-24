@@ -13,8 +13,7 @@ public class ValidatorPasswordFacadeImpl implements ValidatorPasswordFacade {
         this.deductionsValidatorPassword = deductionsValidatorPassword;
     }
 
-    @Override
-    public int obtainScore(String password) {
+    private int obtainScore(String password) {
         int score = 0;
         score += additionValidatorPassword.getAdditionScore(password);
         score += deductionsValidatorPassword.getDeductionScore(password);
