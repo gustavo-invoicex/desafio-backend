@@ -17,6 +17,10 @@ public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword 
         this.score += score;
     }
 
+    private void initializeScore() {
+        this.score = 0;
+    }
+
     @Override
     public int additionNumberOfCharacters(String password) {
         return multipleBonus(password.length(), 4);
@@ -30,6 +34,7 @@ public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword 
         while (matcher.find()) {
             count += matcher.group().length();
         }
+        if (count == 0) return 0;
         return multipleBonus(password.length() - count, 2);
     }
 
@@ -41,6 +46,7 @@ public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword 
         while (matcher.find()) {
             count += matcher.group().length();
         }
+        if (count == 0) return 0;
         return multipleBonus(password.length() - count, 2);
     }
 
@@ -52,7 +58,19 @@ public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword 
         while (matcher.find()) {
             count += matcher.group().length();
         }
+
+        if (isNumbersOnly(password)) return 0;
         return multipleBonus(count, 4);
+    }
+
+    private Boolean isNumbersOnly(String password) {
+        Pattern pattern = Pattern.compile("^\\d+$");
+        Matcher matcher = pattern.matcher(password);
+        int count = 0;
+        while (matcher.find()) {
+            count += matcher.group().length();
+        }
+        return count != 0;
     }
 
     @Override
@@ -74,7 +92,7 @@ public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword 
         while (matcher.find()) {
             count += matcher.group().length();
         }
-        return multipleBonus(count > 1 ? count : 0, 2);
+        return multipleBonus(count >= 1 ? count : 0, 2);
     }
 
     @Override
@@ -85,11 +103,12 @@ public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword 
         total += lowercaseLetters(password) != 0 ? 1 : 0;
         total += validateNumbers(password) != 0 ? 1 : 0;
         total += validateSymbols(password) != 0 ? 1 : 0;
-        return multipleBonus(total > 2 ? total : 0, 2);
+        return multipleBonus(total > 3 ? total : 0, 2);
     }
 
     @Override
     public int getAdditionScore(String password) {
+        initializeScore();
         setScore(additionNumberOfCharacters(password));
         setScore(uppercaseLetters(password));
         setScore(lowercaseLetters(password));

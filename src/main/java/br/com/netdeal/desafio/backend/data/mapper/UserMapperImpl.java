@@ -3,7 +3,8 @@ package br.com.netdeal.desafio.backend.data.mapper;
 import br.com.netdeal.desafio.backend.data.entity.User;
 import br.com.netdeal.desafio.backend.data.model.PasswordSecurityLevel;
 import br.com.netdeal.desafio.backend.data.model.UserDTO;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,12 @@ public class UserMapperImpl implements UserMapper {
                 user.getPassword(),
                 user.getScore(),
                 PasswordSecurityLevel.valueOf(user.getPasswordSecurityLevel()),
-                user.getUsers().stream().map(this::toUserDTO).collect(Collectors.toList())
+                user.getUsers() != null ?
+                        user.getUsers().stream()
+                                .filter(Objects::nonNull)
+                                .map(this::toUserDTO)
+                                .collect(Collectors.toList()) : new ArrayList<>(),
+                user.getChiefUserId()
         );
     }
 
@@ -28,7 +34,8 @@ public class UserMapperImpl implements UserMapper {
                 userDTO.getName(),
                 userDTO.getPassword(),
                 userDTO.getScore(),
-                userDTO.getPasswordSecurityLevel().name()
+                userDTO.getPasswordSecurityLevel().name(),
+                userDTO.getUserId()
         );
     }
 }

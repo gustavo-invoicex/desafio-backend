@@ -1,7 +1,9 @@
 package br.com.netdeal.desafio.backend.data.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -26,8 +28,11 @@ public class User {
     @Column(name = "score")
     int score;
 
-    @OneToMany
-    @JoinColumn(name = "user_id") // Nome da coluna que irá armazenar a chave estrangeira
+    @Column(name = "user_id")
+    private Long chiefUserId;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id") // Nome da coluna que irá armazenar a chave estrangeira
     private List<User> users;
 
     @Column(name = "password_security_level")
@@ -45,6 +50,14 @@ public class User {
         this.password = password;
         this.score = score;
         this.passwordSecurityLevel = passwordSecurityLevel;
+    }
+
+    public User(String name, String password, int score, String passwordSecurityLevel, Long chiefUserId) {
+        this.name = name;
+        this.password = password;
+        this.score = score;
+        this.passwordSecurityLevel = passwordSecurityLevel;
+        this.chiefUserId = chiefUserId;
     }
 
     public Long getId() {
@@ -85,5 +98,9 @@ public class User {
 
     public void setPasswordSecurityLevel(String passwordSecurityLevel) {
         this.passwordSecurityLevel = passwordSecurityLevel;
+    }
+
+    public Long getChiefUserId() {
+        return chiefUserId;
     }
 }

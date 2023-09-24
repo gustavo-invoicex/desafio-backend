@@ -18,16 +18,6 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String name, String password, Long userId, int score, PasswordSecurityLevel passwordSecurityLevel, List<UserDTO> users) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.userId = userId;
-        this.score = score;
-        this.passwordSecurityLevel = passwordSecurityLevel;
-        this.users = users;
-    }
-
     public UserDTO(Long id, String name, String password, int score, PasswordSecurityLevel passwordSecurityLevel, List<UserDTO> users) {
         this.id = id;
         this.name = name;
@@ -35,6 +25,16 @@ public class UserDTO {
         this.score = score;
         this.passwordSecurityLevel = passwordSecurityLevel;
         this.users = users;
+    }
+
+    public UserDTO(Long id, String name, String password, int score, PasswordSecurityLevel passwordSecurityLevel, List<UserDTO> users, Long chiefUserId) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.score = score;
+        this.passwordSecurityLevel = passwordSecurityLevel;
+        this.users = users;
+        this.userId = chiefUserId;
     }
 
     public Long getId() {

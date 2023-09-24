@@ -16,29 +16,19 @@ public class ValidatorPasswordFacadeImpl implements ValidatorPasswordFacade {
     @Override
     public int obtainScore(String password) {
         int score = 0;
-        score += additionValidatorPassword.additionNumberOfCharacters(password);
-        score += additionValidatorPassword.uppercaseLetters(password);
-        score += additionValidatorPassword.lowercaseLetters(password);
-        score += additionValidatorPassword.validateNumbers(password);
-        score += additionValidatorPassword.validateSymbols(password);
-        score += additionValidatorPassword.validateMiddleNumbersOrSymbols(password);
-        score += additionValidatorPassword.validateRequirements(password);
         score += additionValidatorPassword.getAdditionScore(password);
-
-        score += deductionsValidatorPassword.deductionLettersOnly(password);
-        score += deductionsValidatorPassword.deductionNumbersOnly(password);
-        score += deductionsValidatorPassword.deductionRepeatCharacters(password);
-        score += deductionsValidatorPassword.deductionConsecutiveUppercaseLetters(password);
-        score += deductionsValidatorPassword.deductionConsecutiveLowercaseLetters(password);
-        score += deductionsValidatorPassword.deductionConsecutiveNumbers(password);
-        score += deductionsValidatorPassword.deductionSequentialLetters(password);
-        score += deductionsValidatorPassword.deductionSequentialNumbers(password);
-        score += deductionsValidatorPassword.deductionSequentialSymbol(password);
+        score += deductionsValidatorPassword.getDeductionScore(password);
         return score;
     }
 
     @Override
     public PasswordSecurityLevel obtainPasswordSecurityLevel(String password) {
-        return PasswordSecurityLevel.SUFFICIENT;
+        return switch (obtainScore(password) / 20) {
+            case 0 -> PasswordSecurityLevel.VERY_WEAK;
+            case 1 -> PasswordSecurityLevel.WEAK;
+            case 2 -> PasswordSecurityLevel.GOOD;
+            case 3 -> PasswordSecurityLevel.STRONG;
+            default -> PasswordSecurityLevel.VERY_STRONG;
+        };
     }
 }

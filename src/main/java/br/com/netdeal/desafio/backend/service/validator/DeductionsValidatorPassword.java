@@ -19,4 +19,6 @@ public interface DeductionsValidatorPassword {
     int deductionSequentialNumbers(String password);
 
     int deductionSequentialSymbol(String password);
+
+    int getDeductionScore(String password);
 }
