@@ -8,16 +8,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
+import static br.com.netdeal.desafio.backend.config.Constasts.ONE;
+import static br.com.netdeal.desafio.backend.config.Constasts.THREE;
+import static br.com.netdeal.desafio.backend.config.Constasts.TWO;
+import static br.com.netdeal.desafio.backend.config.Constasts.ZERO;
+
 @Component
 public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassword {
 
-    private int score = 0;
+    private int score = ZERO;
 
     @Override
     public int deductionLettersOnly(String password) {
         Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
         Matcher matcher = pattern.matcher(password);
-        int count = 0;
+        int count = ZERO;
         while (matcher.find()) {
             count += matcher.group().length();
         }
@@ -28,7 +33,7 @@ public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassw
     public int deductionNumbersOnly(String password) {
         Pattern pattern = Pattern.compile("^\\d+$");
         Matcher matcher = pattern.matcher(password);
-        int count = 0;
+        int count = ZERO;
         while (matcher.find()) {
             count += matcher.group().length();
         }
@@ -37,14 +42,14 @@ public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassw
 
     @Override
     public int deductionRepeatCharacters(String password) {
-        int count = 0;
+        int count = ZERO;
         char[] characters = password.toCharArray();
         List<Character> charactersList = new ArrayList<>();
         for (char c : characters) {
             charactersList.add(c);
         }
         Map<Character, Integer> duplicates = charactersList.stream().reduce(new HashMap<>(), (map, character) -> {
-            map.put(character, map.getOrDefault(character, 0) + 1);
+            map.put(character, map.getOrDefault(character, ZERO) + ONE);
             return map;
         }, (map1, map2) -> {
             map2.forEach((key, value) -> map1.merge(key, value, Integer::sum));
@@ -52,17 +57,17 @@ public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassw
         });
 
         for (int duplicate : duplicates.values()) {
-            if (duplicate > 1) {
+            if (duplicate > ONE) {
                 count += duplicate;
             }
         }
 
         Boolean isDuplicateCaseSensitive = verifyDuplicateSensitive(charactersList) || verifyDuplicateInsensitive(charactersList);
-        if (count > 0 && isDuplicateCaseSensitive) return -2;
+        if (count > ZERO && isDuplicateCaseSensitive) return -TWO;
 
-        if (count > 0) return -1;
+        if (count > ZERO) return -ONE;
 
-        return 0;
+        return ZERO;
     }
 
     private Boolean verifyDuplicateSensitive(List<Character> characters) {
@@ -79,7 +84,7 @@ public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassw
         for (Character character : characters) {
             char characterUppercase = Character.toUpperCase(character);
             List<Character> collect = characters.stream().map(Character::toUpperCase).toList();
-            if (collect.stream().filter(character1 -> character1.equals(characterUppercase)).count() > 1) {
+            if (collect.stream().filter(character1 -> character1.equals(characterUppercase)).count() > ONE) {
                 return true;
             }
         }
@@ -88,107 +93,107 @@ public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassw
 
     @Override
     public int deductionConsecutiveUppercaseLetters(String password) {
-        int count = 0;
+        int count = ZERO;
         char[] caracteres = password.toCharArray();
 
-        for (int i = 0; i < caracteres.length - 1; i++) {
+        for (int i = ZERO; i < caracteres.length - ONE; i++) {
             char atual = caracteres[i];
-            char proximo = caracteres[i + 1];
+            char proximo = caracteres[i + ONE];
 
             if (Character.isUpperCase(atual) && Character.isUpperCase(proximo) && atual >= 'A' && atual <= 'Z' && proximo >= 'A' && proximo <= 'Z') {
                 count++;
             }
         }
-        return multipleDeductions(-2, count);
+        return multipleDeductions(-TWO, count);
     }
 
     @Override
     public int deductionConsecutiveLowercaseLetters(String password) {
-        int count = 0;
+        int count = ZERO;
         char[] caracteres = password.toCharArray();
 
-        for (int i = 0; i < caracteres.length - 1; i++) {
+        for (int i = ZERO; i < caracteres.length - ONE; i++) {
             char atual = caracteres[i];
-            char proximo = caracteres[i + 1];
+            char proximo = caracteres[i + ONE];
 
             if (Character.isLowerCase(atual) && Character.isLowerCase(proximo) && atual >= 'a' && atual <= 'z' && proximo >= 'a' && proximo <= 'z') {
                 count++;
             }
         }
-        return multipleDeductions(-2, count);
+        return multipleDeductions(-TWO, count);
     }
 
     @Override
     public int deductionConsecutiveNumbers(String password) {
-        int count = 0;
+        int count = ZERO;
         char[] caracteres = password.toCharArray();
 
-        for (int i = 0; i < caracteres.length - 1; i++) {
+        for (int i = ZERO; i < caracteres.length - ONE; i++) {
             char atual = caracteres[i];
-            char proximo = caracteres[i + 1];
+            char proximo = caracteres[i + ONE];
 
             if (Character.isDigit(atual) && Character.isDigit(proximo)) {
                 count++;
             }
         }
-        return multipleDeductions(-2, count);
+        return multipleDeductions(-TWO, count);
     }
 
     @Override
     public int deductionSequentialLetters(String password) {
-        int count = 0;
+        int count = ZERO;
         char[] caracteres = password.toCharArray();
 
-        for (int i = 0; i < caracteres.length - 2; i++) {
-            char primeiro = Character.toLowerCase(caracteres[i]);
-            char segundo = Character.toLowerCase(caracteres[i + 1]);
-            char terceiro = Character.toLowerCase(caracteres[i + 2]);
+        for (int i = ZERO; i < caracteres.length - TWO; i++) {
+            char first = Character.toLowerCase(caracteres[i]);
+            char second = Character.toLowerCase(caracteres[i + ONE]);
+            char third = Character.toLowerCase(caracteres[i + TWO]);
 
-            if (Character.isLetter(primeiro) && Character.isLetter(segundo) && Character.isLetter(terceiro)) {
-                if ((primeiro + 1 == segundo && segundo + 1 == terceiro) || (primeiro - 1 == segundo && segundo - 1 == terceiro)) {
+            if (Character.isLetter(first) && Character.isLetter(second) && Character.isLetter(third)) {
+                if ((first + ONE == second && second + ONE == third) || (first - ONE == second && second - ONE == third)) {
                     count++;
                 }
             }
         }
-        return multipleDeductions(-3, count);
+        return multipleDeductions(-THREE, count);
     }
 
     @Override
     public int deductionSequentialNumbers(String password) {
-        int count = 0;
+        int count = ZERO;
         char[] caracteres = password.toCharArray();
 
-        for (int i = 0; i < caracteres.length - 2; i++) {
-            char primeiro = caracteres[i];
-            char segundo = caracteres[i + 1];
-            char terceiro = caracteres[i + 2];
+        for (int i = ZERO; i < caracteres.length - TWO; i++) {
+            char first = caracteres[i];
+            char second = caracteres[i + ONE];
+            char third = caracteres[i + TWO];
 
-            if (Character.isDigit(primeiro) && Character.isDigit(segundo) && Character.isDigit(terceiro)) {
-                if ((primeiro + 1 == segundo && segundo + 1 == terceiro) || (primeiro - 1 == segundo && segundo - 1 == terceiro)) {
+            if (Character.isDigit(first) && Character.isDigit(second) && Character.isDigit(third)) {
+                if ((first + ONE == second && second + ONE == third) || (first - ONE == second && second - ONE == third)) {
                     count++;
                 }
             }
         }
-        return multipleDeductions(-3, count);
+        return multipleDeductions(-THREE, count);
     }
 
     @Override
     public int deductionSequentialSymbol(String password) {
-        int count = 0;
+        int count = ZERO;
         char[] caracteres = password.toCharArray();
 
-        for (int i = 0; i < caracteres.length - 2; i++) {
-            char primeiro = caracteres[i];
-            char segundo = caracteres[i + 1];
-            char terceiro = caracteres[i + 2];
+        for (int i = ZERO; i < caracteres.length - TWO; i++) {
+            char first = caracteres[i];
+            char second = caracteres[i + ONE];
+            char third = caracteres[i + TWO];
 
-            if (isSimboloEspecial(primeiro) && isSimboloEspecial(segundo) && isSimboloEspecial(terceiro)) {
-                if ((ordemCrescente(primeiro, segundo, terceiro) || ordemDecrescente(primeiro, segundo, terceiro))) {
+            if (isEspecialSymbol(first) && isEspecialSymbol(second) && isEspecialSymbol(third)) {
+                if ((sortAsc(first, second, third) || sortDesc(first, second, third))) {
                     count++;
                 }
             }
         }
-        return multipleDeductions(-3, count);
+        return multipleDeductions(-THREE, count);
     }
 
     @Override
@@ -206,19 +211,19 @@ public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassw
         return getScore();
     }
 
-    private boolean isSimboloEspecial(char caractere) {
+    private boolean isEspecialSymbol(char caractere) {
         String simbolosEspeciais = ")!@#$%^&*(";
-        return simbolosEspeciais.indexOf(caractere) != -1;
+        return simbolosEspeciais.indexOf(caractere) != -ONE;
     }
 
-    private boolean ordemCrescente(char a, char b, char c) {
+    private boolean sortAsc(char a, char b, char c) {
         String ordemEspecifica = ")!@#$%^&*(";
-        return ordemEspecifica.indexOf(a) + 1 == ordemEspecifica.indexOf(b) && ordemEspecifica.indexOf(b) + 1 == ordemEspecifica.indexOf(c);
+        return ordemEspecifica.indexOf(a) + ONE == ordemEspecifica.indexOf(b) && ordemEspecifica.indexOf(b) + ONE == ordemEspecifica.indexOf(c);
     }
 
-    private boolean ordemDecrescente(char a, char b, char c) {
+    private boolean sortDesc(char a, char b, char c) {
         String ordemEspecifica = ")!@#$%^&*(";
-        return ordemEspecifica.indexOf(a) - 1 == ordemEspecifica.indexOf(b) && ordemEspecifica.indexOf(b) - 1 == ordemEspecifica.indexOf(c);
+        return ordemEspecifica.indexOf(a) - ONE == ordemEspecifica.indexOf(b) && ordemEspecifica.indexOf(b) - ONE == ordemEspecifica.indexOf(c);
     }
 
     private int multipleDeductions(int count, int weight) {
@@ -230,7 +235,7 @@ public class DeductionsValidatorPasswordImpl implements DeductionsValidatorPassw
     }
 
     private void initializeScore() {
-        this.score = 0;
+        this.score = ZERO;
     }
 
     public int getScore() {

@@ -5,4 +5,6 @@ import br.com.netdeal.desafio.backend.data.model.PasswordSecurityLevel;
 public interface ValidatorPasswordFacade {
     int obtainScore(String password);
     PasswordSecurityLevel obtainPasswordSecurityLevel(String password);
+
+    int obtainScorePercent(String password);
 }

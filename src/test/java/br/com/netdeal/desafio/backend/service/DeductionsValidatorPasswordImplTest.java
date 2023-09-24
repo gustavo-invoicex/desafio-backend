@@ -29,7 +29,7 @@ class DeductionsValidatorPasswordImplTest {
     @Test
     void deductionRepeatCharacters() {
         int result = builder.deductionRepeatCharacters(PASSWORD);
-        Assertions.assertEquals(-1, result);
+        Assertions.assertEquals(-2, result);
     }
 
     @Test

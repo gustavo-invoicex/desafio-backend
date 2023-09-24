@@ -4,10 +4,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
+import static br.com.netdeal.desafio.backend.config.Constasts.FOUR;
+import static br.com.netdeal.desafio.backend.config.Constasts.ONE;
+import static br.com.netdeal.desafio.backend.config.Constasts.SIX;
+import static br.com.netdeal.desafio.backend.config.Constasts.THREE;
+import static br.com.netdeal.desafio.backend.config.Constasts.TWO;
+import static br.com.netdeal.desafio.backend.config.Constasts.ZERO;
+
 @Component
 public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword {
 
-    private int score = 0;
+    private int score = ZERO;
 
     private int getScore() {
         return score;
@@ -18,92 +25,92 @@ public class AdditionValidatorPasswordImpl implements AdditionValidatorPassword 
     }
 
     private void initializeScore() {
-        this.score = 0;
+        this.score = ZERO;
     }
 
     @Override
     public int additionNumberOfCharacters(String password) {
-        return multipleBonus(password.length(), 4);
+        return multipleBonus(password.length(), FOUR);
     }
 
     @Override
     public int uppercaseLetters(String password) {
         Pattern pattern = Pattern.compile("[A-Z]");
         Matcher matcher = pattern.matcher(password);
-        int count = 0;
+        int count = ZERO;
         while (matcher.find()) {
             count += matcher.group().length();
         }
-        if (count == 0) return 0;
-        return multipleBonus(password.length() - count, 2);
+        if (count == ZERO) return ZERO;
+        return multipleBonus(password.length() - count, TWO);
     }
 
     @Override
     public int lowercaseLetters(String password) {
         Pattern pattern = Pattern.compile("[a-z]");
         Matcher matcher = pattern.matcher(password);
-        int count = 0;
+        int count = ZERO;
         while (matcher.find()) {
             count += matcher.group().length();
         }
-        if (count == 0) return 0;
-        return multipleBonus(password.length() - count, 2);
+        if (count == ZERO) return ZERO;
+        return multipleBonus(password.length() - count, TWO);
     }
 
     @Override
     public int validateNumbers(String password) {
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(password);
-        int count = 0;
+        int count = ZERO;
         while (matcher.find()) {
             count += matcher.group().length();
         }
 
-        if (isNumbersOnly(password)) return 0;
-        return multipleBonus(count, 4);
+        if (isNumbersOnly(password)) return ZERO;
+        return multipleBonus(count, FOUR);
     }
 
     private Boolean isNumbersOnly(String password) {
         Pattern pattern = Pattern.compile("^\\d+$");
         Matcher matcher = pattern.matcher(password);
-        int count = 0;
+        int count = ZERO;
         while (matcher.find()) {
             count += matcher.group().length();
         }
-        return count != 0;
+        return count != ZERO;
     }
 
     @Override
     public int validateSymbols(String password) {
         Pattern pattern = Pattern.compile("[^a-zA-Z0-9\\s]");
         Matcher matcher = pattern.matcher(password);
-        int count = 0;
+        int count = ZERO;
         while (matcher.find()) {
             count += matcher.group().length();
         }
-        return multipleBonus(count, 6);
+        return multipleBonus(count, SIX);
     }
 
     @Override
     public int validateMiddleNumbersOrSymbols(String password) {
         Pattern pattern = Pattern.compile("[^a-zA-Z\\s]");
         Matcher matcher = pattern.matcher(password);
-        int count = -1;
+        int count = -ONE;
         while (matcher.find()) {
             count += matcher.group().length();
         }
-        return multipleBonus(count >= 1 ? count : 0, 2);
+        return multipleBonus(count >= ONE ? count : ZERO, TWO);
     }
 
     @Override
     public int validateRequirements(String password) {
-        int total = 0;
-        total += additionNumberOfCharacters(password) != 0 ? 1 : 0;
-        total += uppercaseLetters(password) != 0 ? 1 : 0;
-        total += lowercaseLetters(password) != 0 ? 1 : 0;
-        total += validateNumbers(password) != 0 ? 1 : 0;
-        total += validateSymbols(password) != 0 ? 1 : 0;
-        return multipleBonus(total > 3 ? total : 0, 2);
+        int total = ZERO;
+        total += additionNumberOfCharacters(password) != ZERO ? ONE : ZERO;
+        total += uppercaseLetters(password) != ZERO ? ONE : ZERO;
+        total += lowercaseLetters(password) != ZERO ? ONE : ZERO;
+        total += validateNumbers(password) != ZERO ? ONE : ZERO;
+        total += validateSymbols(password) != ZERO ? ONE : ZERO;
+        return multipleBonus(total > THREE ? total : ZERO, TWO);
     }
 
     @Override

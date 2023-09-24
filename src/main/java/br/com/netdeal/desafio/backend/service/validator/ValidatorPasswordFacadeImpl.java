@@ -31,4 +31,10 @@ public class ValidatorPasswordFacadeImpl implements ValidatorPasswordFacade {
             default -> PasswordSecurityLevel.VERY_STRONG;
         };
     }
+
+    @Override
+    public int obtainScorePercent(String password) {
+        int score = obtainScore(password);
+        return Math.min(score, 100);
+    }
 }
